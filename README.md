@@ -1,6 +1,6 @@
 # fedimint-ts-client
 
-This is a TypeScript client that consumes the Fedimint Http Client (https://github.com/kodylow/fedimint-http-client)[https://github.com/kodylow/fedimint-http-client]
+This is a TypeScript client that consumes the Fedimint Http Client (https://github.com/kodylow/fedimint-http-client)[https://github.com/kodylow/fedimint-http-client], communicating with it via HTTP and a password. It's a hacky prototype, but it works until we can get a proper TS client for Fedimint. All of the federation handling code happens in the fedimint-http-client, this just exposes a simple API for interacting with the client from TypeScript (will be mirrored in Python and Go).
 
 Start the following in the fedimint-http-client .env environment variables:
 
