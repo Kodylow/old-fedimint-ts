@@ -8,13 +8,21 @@ const password = process.env.PASSWORD || 'password';
 
 const fedimintClient = new FedimintClient({ baseUrl, password });
 
-// const info = await fedimintClient.info();
-// console.log(info);
+fedimintClient.info().then((response) => {
+    console.log("Current Total Msats Ecash: ", response.total_amount_msat);
+});
 
 const { operation_id, invoice } = await fedimintClient.modules.ln.createInvoice({
-    amount_msat: 1000,
+    amount_msat: 10000,
     description: 'test',
 });
 
-console.log(operation_id, invoice);
+console.log("Created 10 sat Invoice: ", invoice);
+
+console.log("Waiting for payment...");
+
+fedimintClient.modules.ln.awaitInvoice({ operation_id }).then((response) => {
+    console.log("Payment Received!");
+    console.log("New Total Msats Ecash: ", response.total_amount_msat);
+});
 
