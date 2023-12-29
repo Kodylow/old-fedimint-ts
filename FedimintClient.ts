@@ -1,12 +1,20 @@
-import { AwaitDepositRequest, AwaitDepositResponse, AwaitInvoiceRequest, AwaitLnPayRequest, BackupRequest, CombineRequest, CombineResponse, DepositAddressRequest, DepositAddressResponse, Gateway, InfoResponse, ListOperationsRequest, LnInvoiceRequest, LnInvoiceResponse, LnPayRequest, LnPayResponse, OperationOutput, ReissueRequest, ReissueResponse, SpendRequest, SpendResponse, SplitRequest, SplitResponse, SwitchGatewayRequest, ValidateRequest, ValidateResponse, WithdrawRequest, WithdrawResponse } from "./types";
+import { BackupRequest, InfoResponse, ListOperationsRequest, OperationOutput } from "./types/common";
+import { AwaitInvoiceRequest, AwaitLnPayRequest, Gateway, LnInvoiceRequest, LnInvoiceResponse, LnPayRequest, LnPayResponse, SwitchGatewayRequest } from "./types/modules/ln";
+import { CombineRequest, CombineResponse, ReissueRequest, ReissueResponse, SpendRequest, SpendResponse, SplitRequest, SplitResponse, ValidateRequest, ValidateResponse } from "./types/modules/mint";
+import { AwaitDepositRequest, AwaitDepositResponse, DepositAddressRequest, DepositAddressResponse, WithdrawRequest, WithdrawResponse } from "./types/modules/wallet";
 
 type FedimintResponse<T> = Promise<T>;
+
+type FedimintClientParams = {
+    baseUrl: string;
+    password: string;
+}
 
 class FedimintClient {
     private baseUrl: string;
     private password: string;
 
-    constructor(baseUrl: string, password: string) {
+    constructor({ baseUrl, password }: FedimintClientParams) {
         this.baseUrl = baseUrl + '/fedimint/v2'
         this.password = password;
     }
@@ -117,3 +125,5 @@ class FedimintClient {
         },
     }
 }
+
+export default FedimintClient;
