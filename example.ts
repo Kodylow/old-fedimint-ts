@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+const baseUrl = process.env.BASE_URL || "http://localhost:3000";
 const password = process.env.PASSWORD || "password";
 
 const fedimintClient = new FedimintClient({ baseUrl, password });
