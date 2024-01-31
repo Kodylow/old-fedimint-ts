@@ -20,6 +20,10 @@ const fedimintClient = await builder.build();
 const { federation_ids } = await fedimintClient.federationIds();
 await fedimintClient.setDefaultFederationId(federation_ids[0]);
 
+// Any methods that call on a specific federation can optionally take a federationId as the last argument
+// If no federationId is passed, the default federationId is used
+const _ = await fedimintClient.listOperations({ limit: 10 }, federation_ids[1]);
+
 // Admin methods give summaries by federation
 fedimintClient.info().then((response) => {
   console.log("Current Total Msats Ecash: ", response.total_amount_msat);

@@ -232,10 +232,12 @@ class FedimintClient {
    */
   public async listOperations(
     request: ListOperationsRequest,
+    federationId?: string,
   ): FedimintResponse<OperationOutput[]> {
     return await this.postWithId<OperationOutput[]>(
       "/admin/list-operations",
       request,
+      federationId,
     );
   }
 
