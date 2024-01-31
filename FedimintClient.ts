@@ -2,6 +2,7 @@ import type {
   BackupRequest,
   InfoResponse,
   ListOperationsRequest,
+  FederationIdsResponse,
   OperationOutput,
 } from "./types/common";
 import type {
@@ -37,13 +38,83 @@ import type {
 
 type FedimintResponse<T> = Promise<T>;
 
+class FedimintClientBuilder {
+  private baseUrl: string;
+  private password: string;
+  private defaultFederationId: string;
+  private inviteCode?: string;
+
+  constructor() {
+    this.baseUrl = "";
+    this.password = "";
+    this.defaultFederationId = "";
+    this.inviteCode = undefined;
+  }
+
+  setBaseUrl(baseUrl: string): FedimintClientBuilder {
+    this.baseUrl = baseUrl;
+
+    return this;
+  }
+
+  setPassword(password: string): FedimintClientBuilder {
+    this.password = password;
+
+    return this;
+  }
+
+  setDefaultFederationId(defaultFederationId: string): FedimintClientBuilder {
+    this.defaultFederationId = defaultFederationId;
+
+    return this;
+  }
+
+  setInviteCode(inviteCode: string): FedimintClientBuilder {
+    this.inviteCode = inviteCode;
+
+    return this;
+  }
+
+  async build(): Promise<FedimintClient> {
+    const client = new FedimintClient(this.baseUrl, this.password);
+
+    let federationIds: string[] = [];
+
+    try {
+      if (this.inviteCode) {
+        federationIds = (await client.join(this.inviteCode)).federation_ids;
+      } else {
+        federationIds = (await client.federationIds()).federation_ids;
+      }
+    } catch (e) {
+      throw new Error(
+        "Failed to connect to fedimint-http, check your configuration",
+      );
+    }
+
+    if (federationIds.length === 0) {
+      throw new Error(
+        "Fedimint-http is not connected to any federations, must build with an invite code or connect to at least one federation manually",
+      );
+    }
+
+    return client;
+  }
+}
+
 class FedimintClient {
   private baseUrl: string;
   private password: string;
+  private defaultFederationId: string;
 
-  constructor({ baseUrl, password }: { baseUrl: string; password: string }) {
+  constructor(baseUrl: string, password: string, defaultFederationId?: string) {
     this.baseUrl = baseUrl + "/fedimint/v2";
     this.password = password;
+    this.defaultFederationId = defaultFederationId || "";
+  }
+
+  setDefaultFederationId(defaultFederationId: string) {
+    this.defaultFederationId = defaultFederationId;
   }
 
   /**
@@ -88,10 +159,27 @@ class FedimintClient {
   }
 
   /**
-   * Fetches wallet information including holdings, tiers, and federation metadata.
+   * Makes a POST request to the `baseURL` at the given `endpoint` with the provided `body`.
+   * Adds the default federation ID to the request body.
+   * Receives a JSON response.
+   * @param endpoint - The endpoint to make the request to.
+   * @param body - The body of the request.
    */
-  public async info(): FedimintResponse<InfoResponse> {
-    return await this.get<InfoResponse>("/admin/info");
+  private async postWithId<T>(endpoint: string, body: any): FedimintResponse<T> {
+    const res = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.password}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...body, fedimintId: this.defaultFederationId }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`POST request failed with status ${res.status}`);
+    }
+
+    return (await res.json()) as T;
   }
 
   /**
@@ -106,6 +194,28 @@ class FedimintClient {
    */
   public async discoverVersion(): FedimintResponse<string> {
     return this.get<string>("/admin/discover-version");
+  }
+
+  /**
+   * Returns the current set of connected federation IDs
+   */
+  public async federationIds(): FedimintResponse<FederationIdsResponse> {
+    return await this.get<FederationIdsResponse>("/admin/federation-ids");
+  }
+
+  /**
+   * Fetches wallet information including holdings, tiers, and federation metadata.
+   */
+  public async info(): FedimintResponse<InfoResponse> {
+    return await this.get<InfoResponse>("/admin/info");
+  }
+
+  /**
+   * Joins a federation with an inviteCode
+   * Returns an array of federation IDs that the client is now connected to
+   */
+  public async join(inviteCode: string): FedimintResponse<FederationIdsResponse> {
+    return await this.post<FederationIdsResponse>("/admin/join", { inviteCode });
   }
 
   /**
@@ -250,4 +360,7 @@ class FedimintClient {
   };
 }
 
-export default FedimintClient;
+export {
+  FedimintClientBuilder,
+  FedimintClient
+};

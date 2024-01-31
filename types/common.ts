@@ -23,6 +23,10 @@ interface ListOperationsRequest {
     limit: number;
 }
 
+interface FederationIdsResponse {
+    federation_ids: string[];
+}
+
 interface OperationOutput {
     id: string;
     creation_time: string;
@@ -37,5 +41,6 @@ export {
     InfoResponse,
     BackupRequest,
     ListOperationsRequest,
+    FederationIdsResponse,
     OperationOutput,
 }
