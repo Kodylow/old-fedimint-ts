@@ -186,7 +186,7 @@ class FedimintClient {
    * Uploads the encrypted snapshot of mint notest to the federation
    */
   public async backup(metadata: BackupRequest): FedimintResponse<void> {
-    await this.post<void>("/admin/backup", metadata);
+    await this.postWithId<void>("/admin/backup", metadata);
   }
 
   /**
