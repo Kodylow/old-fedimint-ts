@@ -82,7 +82,8 @@ class FedimintClientBuilder {
 
     try {
       if (this.inviteCode) {
-        federationIds = (await client.join(this.inviteCode)).federation_ids;
+        // If an invite code is provided, join the federation and set it as the default
+        federationIds = (await client.join(this.inviteCode, true)).federation_ids;
       } else {
         federationIds = (await client.federationIds()).federation_ids;
       }
@@ -190,6 +191,13 @@ class FedimintClient {
   }
 
   /**
+   * Returns the client configurations by federationId
+   */
+  public async config(): FedimintResponse<any> {
+    return await this.get<any>("/admin/config");
+  }
+
+  /**
    * Returns the API version to use to communicate with the federation
    */
   public async discoverVersion(): FedimintResponse<string> {
@@ -214,8 +222,8 @@ class FedimintClient {
    * Joins a federation with an inviteCode
    * Returns an array of federation IDs that the client is now connected to
    */
-  public async join(inviteCode: string): FedimintResponse<FederationIdsResponse> {
-    return await this.post<FederationIdsResponse>("/admin/join", { inviteCode });
+  public async join(inviteCode: string, setDefault: boolean): FedimintResponse<FederationIdsResponse> {
+    return await this.post<FederationIdsResponse>("/admin/join", { inviteCode, setDefault });
   }
 
   /**
@@ -224,17 +232,10 @@ class FedimintClient {
   public async listOperations(
     request: ListOperationsRequest,
   ): FedimintResponse<OperationOutput[]> {
-    return await this.post<OperationOutput[]>(
+    return await this.postWithId<OperationOutput[]>(
       "/admin/list-operations",
       request,
     );
-  }
-
-  /**
-   * Returns the client configuration for the federation
-   */
-  public async config(): FedimintResponse<any> {
-    return await this.get<any>("/admin/config");
   }
 
   /**
@@ -247,7 +248,7 @@ class FedimintClient {
     createInvoice: async (
       request: LnInvoiceRequest,
     ): FedimintResponse<LnInvoiceResponse> =>
-      await this.post<LnInvoiceResponse>("/ln/invoice", request),
+      await this.postWithId<LnInvoiceResponse>("/ln/invoice", request),
 
     /**
      * Waits for a lightning invoice to be paid
@@ -255,13 +256,13 @@ class FedimintClient {
     awaitInvoice: async (
       request: AwaitInvoiceRequest,
     ): FedimintResponse<InfoResponse> =>
-      await this.post<InfoResponse>("/ln/await-invoice", request),
+      await this.postWithId<InfoResponse>("/ln/await-invoice", request),
 
     /**
      * Pays a lightning invoice or lnurl via a gateway
      */
     pay: async (request: LnPayRequest): FedimintResponse<LnPayResponse> =>
-      await this.post<LnPayResponse>("/ln/pay", request),
+      await this.postWithId<LnPayResponse>("/ln/pay", request),
 
     /**
      * Waits for a lightning payment to complete
@@ -269,7 +270,7 @@ class FedimintClient {
     awaitPay: async (
       request: AwaitLnPayRequest,
     ): FedimintResponse<LnPayResponse> =>
-      await this.post<LnPayResponse>("/ln/await-pay", request),
+      await this.postWithId<LnPayResponse>("/ln/await-pay", request),
 
     /**
      * Outputs a list of registered lighting lightning gateways
@@ -283,7 +284,7 @@ class FedimintClient {
     switchGateway: async (
       request: SwitchGatewayRequest,
     ): FedimintResponse<Gateway> =>
-      await this.post<Gateway>("/ln/switch-gateway", request),
+      await this.postWithId<Gateway>("/ln/switch-gateway", request),
   };
 
   /**
@@ -307,7 +308,7 @@ class FedimintClient {
     awaitDeposit: async (
       request: AwaitDepositRequest,
     ): FedimintResponse<AwaitDepositResponse> =>
-      await this.post<AwaitDepositResponse>("/wallet/await-deposit", request),
+      await this.postWithId<AwaitDepositResponse>("/wallet/await-deposit", request),
 
     /**
      * Withdraws bitcoin from the federation
@@ -315,7 +316,7 @@ class FedimintClient {
     withdraw: async (
       request: WithdrawRequest,
     ): FedimintResponse<WithdrawResponse> =>
-      await this.post<WithdrawResponse>("/wallet/withdraw", request),
+      await this.postWithId<WithdrawResponse>("/wallet/withdraw", request),
   };
 
   /**
@@ -328,13 +329,13 @@ class FedimintClient {
     reissue: async (
       request: ReissueRequest,
     ): FedimintResponse<ReissueResponse> =>
-      await this.post<ReissueResponse>("/mint/reissue", request),
+      await this.postWithId<ReissueResponse>("/mint/reissue", request),
 
     /**
      * Spends an ecash note
      */
     spend: async (request: SpendRequest): FedimintResponse<SpendResponse> =>
-      await this.post<SpendResponse>("/mint/spend", request),
+      await this.postWithId<SpendResponse>("/mint/spend", request),
 
     /**
      * Validates an ecash note
@@ -342,7 +343,7 @@ class FedimintClient {
     validate: async (
       request: ValidateRequest,
     ): FedimintResponse<ValidateResponse> =>
-      await this.post<ValidateResponse>("/mint/validate", request),
+      await this.postWithId<ValidateResponse>("/mint/validate", request),
 
     /**
      * Splits an ecash note
