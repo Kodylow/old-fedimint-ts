@@ -161,19 +161,20 @@ class FedimintClient {
 
   /**
    * Makes a POST request to the `baseURL` at the given `endpoint` with the provided `body`.
-   * Adds the default federation ID to the request body.
+   * Adds the provided federation ID or the default federation ID to the request body.
    * Receives a JSON response.
    * @param endpoint - The endpoint to make the request to.
    * @param body - The body of the request.
+   * @param federationId - The federation ID to use. If not provided, the default federation ID is used.
    */
-  private async postWithId<T>(endpoint: string, body: any): FedimintResponse<T> {
+  private async postWithId<T>(endpoint: string, body: any, federationId?: string): FedimintResponse<T> {
     const res = await fetch(`${this.baseUrl}${endpoint}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${this.password}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...body, fedimintId: this.defaultFederationId }),
+      body: JSON.stringify({ ...body, fedimintId: federationId || this.defaultFederationId }),
     });
 
     if (!res.ok) {
@@ -186,8 +187,8 @@ class FedimintClient {
   /**
    * Uploads the encrypted snapshot of mint notest to the federation
    */
-  public async backup(metadata: BackupRequest): FedimintResponse<void> {
-    await this.postWithId<void>("/admin/backup", metadata);
+  public async backup(metadata: BackupRequest, federationId?: string): FedimintResponse<void> {
+    await this.postWithId<void>("/admin/backup", metadata, federationId);
   }
 
   /**
@@ -247,43 +248,48 @@ class FedimintClient {
      */
     createInvoice: async (
       request: LnInvoiceRequest,
+      federationId?: string,
     ): FedimintResponse<LnInvoiceResponse> =>
-      await this.postWithId<LnInvoiceResponse>("/ln/invoice", request),
+      await this.postWithId<LnInvoiceResponse>("/ln/invoice", request, federationId),
 
     /**
      * Waits for a lightning invoice to be paid
      */
     awaitInvoice: async (
       request: AwaitInvoiceRequest,
+      federationId?: string,
     ): FedimintResponse<InfoResponse> =>
-      await this.postWithId<InfoResponse>("/ln/await-invoice", request),
+      await this.postWithId<InfoResponse>("/ln/await-invoice", request, federationId),
 
     /**
      * Pays a lightning invoice or lnurl via a gateway
      */
-    pay: async (request: LnPayRequest): FedimintResponse<LnPayResponse> =>
-      await this.postWithId<LnPayResponse>("/ln/pay", request),
+    pay: async (request: LnPayRequest, federationId?: string): FedimintResponse<LnPayResponse> =>
+      await this.postWithId<LnPayResponse>("/ln/pay", request, federationId),
 
     /**
      * Waits for a lightning payment to complete
      */
     awaitPay: async (
       request: AwaitLnPayRequest,
+      federationId?: string,
     ): FedimintResponse<LnPayResponse> =>
-      await this.postWithId<LnPayResponse>("/ln/await-pay", request),
+      await this.postWithId<LnPayResponse>("/ln/await-pay", request, federationId),
 
     /**
      * Outputs a list of registered lighting lightning gateways
      */
     listGateways: async (): FedimintResponse<Gateway[]> =>
       await this.postWithId<Gateway[]>("/ln/list-gateways", {}),
+
     /**
      * Switches the active lightning gateway
      */
     switchGateway: async (
       request: SwitchGatewayRequest,
+      federationId?: string,
     ): FedimintResponse<Gateway> =>
-      await this.postWithId<Gateway>("/ln/switch-gateway", request),
+      await this.postWithId<Gateway>("/ln/switch-gateway", request, federationId),
   };
 
   /**
@@ -295,10 +301,12 @@ class FedimintClient {
      */
     createDepositAddress: async (
       request: DepositAddressRequest,
+      federationId?: string,
     ): FedimintResponse<DepositAddressResponse> =>
-      await this.post<DepositAddressResponse>(
+      await this.postWithId<DepositAddressResponse>(
         "/wallet/deposit-address",
         request,
+        federationId,
       ),
 
     /**
@@ -306,16 +314,18 @@ class FedimintClient {
      */
     awaitDeposit: async (
       request: AwaitDepositRequest,
+      federationId?: string,
     ): FedimintResponse<AwaitDepositResponse> =>
-      await this.postWithId<AwaitDepositResponse>("/wallet/await-deposit", request),
+      await this.postWithId<AwaitDepositResponse>("/wallet/await-deposit", request, federationId),
 
     /**
      * Withdraws bitcoin from the federation
      */
     withdraw: async (
       request: WithdrawRequest,
+      federationId?: string,
     ): FedimintResponse<WithdrawResponse> =>
-      await this.postWithId<WithdrawResponse>("/wallet/withdraw", request),
+      await this.postWithId<WithdrawResponse>("/wallet/withdraw", request, federationId),
   };
 
   /**
@@ -327,22 +337,24 @@ class FedimintClient {
      */
     reissue: async (
       request: ReissueRequest,
+      federationId?: string,
     ): FedimintResponse<ReissueResponse> =>
-      await this.postWithId<ReissueResponse>("/mint/reissue", request),
+      await this.postWithId<ReissueResponse>("/mint/reissue", request, federationId),
 
     /**
      * Spends an ecash note
      */
-    spend: async (request: SpendRequest): FedimintResponse<SpendResponse> =>
-      await this.postWithId<SpendResponse>("/mint/spend", request),
+    spend: async (request: SpendRequest, federationId?: string): FedimintResponse<SpendResponse> =>
+      await this.postWithId<SpendResponse>("/mint/spend", request, federationId),
 
     /**
      * Validates an ecash note
      */
     validate: async (
       request: ValidateRequest,
+      federationId?: string,
     ): FedimintResponse<ValidateResponse> =>
-      await this.postWithId<ValidateResponse>("/mint/validate", request),
+      await this.postWithId<ValidateResponse>("/mint/validate", request, federationId),
 
     /**
      * Splits an ecash note
