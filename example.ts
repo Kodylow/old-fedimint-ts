@@ -29,7 +29,7 @@ fedimintClient.info().then((response) => {
   console.log("Current Total Msats Ecash: ", response.total_amount_msat);
 });
 
-// All module methods are called on the default federationId
+// All module methods are called on the default federationId if you don't pass in a federationId
 const { operation_id, invoice } = await fedimintClient.ln.createInvoice({
   amount_msat: 10000,
   description: "test",
