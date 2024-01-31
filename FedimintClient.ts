@@ -276,8 +276,7 @@ class FedimintClient {
      * Outputs a list of registered lighting lightning gateways
      */
     listGateways: async (): FedimintResponse<Gateway[]> =>
-      await this.get<Gateway[]>("/ln/list-gateways"),
-
+      await this.postWithId<Gateway[]>("/ln/list-gateways", {}),
     /**
      * Switches the active lightning gateway
      */

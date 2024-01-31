@@ -36,6 +36,10 @@ interface Gateway {
     active: boolean;
 }
 
+interface ListGatewaysResponse {
+    [federationId: string]: Gateway[];
+}
+
 interface SwitchGatewayRequest {
     gateway_id: string;
 }
@@ -48,5 +52,6 @@ export {
     LnPayResponse,
     AwaitLnPayRequest,
     Gateway,
+    ListGatewaysResponse,
     SwitchGatewayRequest,
 }
