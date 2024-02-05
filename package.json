@@ -4,7 +4,7 @@
   "type": "module",
   "author": "The Fedimint Developers",
   "license": "MIT",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A TypeScript Wrapper for the Fedimint HTTP Client",
   "scripts": {
     "build": "tsc"
@@ -17,6 +17,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "fedimint-ts": "^0.2.5"
   }
 }

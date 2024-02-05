@@ -1,4 +1,4 @@
-import {FedimintClientBuilder} from "./FedimintClient";
+import { FedimintClientBuilder } from "fedimint-ts";
 import dotenv from "dotenv";
 
 dotenv.config();
