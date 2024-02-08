@@ -50,7 +50,7 @@ interface SpendableNote {
 }
 
 interface ReissueRequest {
-    notes: OOBNotes;
+    notes: string;
 }
 
 interface ReissueResponse {
@@ -65,11 +65,11 @@ interface SpendRequest {
 
 interface SpendResponse {
     operation: string;
-    notes: OOBNotes; 
+    notes: string;
 }
 
 interface ValidateRequest {
-    notes: OOBNotes;
+    notes: string;
 }
 
 interface ValidateResponse {
@@ -85,11 +85,11 @@ interface SplitResponse {
 }
 
 interface CombineRequest {
-    notes: OOBNotes[];
+    notes: string;
 }
 
 interface CombineResponse {
-    notes: OOBNotes;
+    notes: string;
 }
 
 export {
