@@ -44,7 +44,7 @@ interface SwitchGatewayRequest {
     gateway_id: string;
 }
 
-export {
+export type {
     LnInvoiceRequest,
     LnInvoiceResponse,
     AwaitInvoiceRequest,

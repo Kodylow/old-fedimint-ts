@@ -25,7 +25,7 @@ interface WithdrawResponse {
     fees_sat: number;
 }
 
-export {
+export type {
     DepositAddressRequest,
     DepositAddressResponse,
     AwaitDepositRequest,

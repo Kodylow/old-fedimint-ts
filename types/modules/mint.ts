@@ -92,7 +92,7 @@ interface CombineResponse {
     notes: string;
 }
 
-export {
+export type {
     ReissueRequest,
     ReissueResponse,
     SpendRequest,
