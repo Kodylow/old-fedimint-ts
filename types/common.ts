@@ -36,7 +36,7 @@ interface OperationOutput {
     outcome?: any;
 }
 
-export {
+export type {
     Tiered,
     TieredSummary,
     InfoResponse,
