@@ -41,14 +41,10 @@ type FedimintResponse<T> = Promise<T>;
 class FedimintClientBuilder {
   private baseUrl: string;
   private password: string;
-  private defaultFederationId: string;
-  private inviteCode?: string;
 
   constructor() {
     this.baseUrl = "";
     this.password = "";
-    this.defaultFederationId = "";
-    this.inviteCode = undefined;
   }
 
   setBaseUrl(baseUrl: string): FedimintClientBuilder {
@@ -63,41 +59,8 @@ class FedimintClientBuilder {
     return this;
   }
 
-  setDefaultFederationId(defaultFederationId: string): FedimintClientBuilder {
-    this.defaultFederationId = defaultFederationId;
-
-    return this;
-  }
-
-  setInviteCode(inviteCode: string): FedimintClientBuilder {
-    this.inviteCode = inviteCode;
-
-    return this;
-  }
-
   async build(): Promise<FedimintClient> {
     const client = new FedimintClient(this.baseUrl, this.password);
-
-    let federationIds: string[] = [];
-
-    try {
-      if (this.inviteCode) {
-        // If an invite code is provided, join the federation and set it as the default
-        federationIds = (await client.join(this.inviteCode, true)).federation_ids;
-      } else {
-        federationIds = (await client.federationIds()).federation_ids;
-      }
-    } catch (e) {
-      throw new Error(
-        "Failed to connect to fedimint-http, check your configuration",
-      );
-    }
-
-    if (federationIds.length === 0) {
-      throw new Error(
-        "Fedimint-http is not connected to any federations, must build with an invite code or connect to at least one federation manually",
-      );
-    }
 
     return client;
   }
@@ -119,11 +82,29 @@ class FedimintClient {
   }
 
   /**
+   * Ensures that a default federation ID is set by fetching the connected federation IDs
+   * and setting the default to the first one if not already set.
+   */
+  private async ensureDefaultFederationId(): Promise<void> {
+    if (!this.defaultFederationId) {
+      const { federationIds } = await this.federationIds();
+
+      if (federationIds && federationIds.length > 0) {
+        this.defaultFederationId = federationIds[0];
+      } else {
+        throw new Error("No connected federations found to set as default.");
+      }
+    }
+  }
+
+  /**
    * Makes a GET request to the `baseURL` at the given `endpoint`.
    * Receives a JSON response.
+   * Automatically ensures a default federation ID is set if needed.
    * @param endpoint - The endpoint to make the request to.
    */
   private async get<T>(endpoint: string): FedimintResponse<T> {
+    await this.ensureDefaultFederationId();
     const res = await fetch(`${this.baseUrl}${endpoint}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${this.password}` },
@@ -139,10 +120,12 @@ class FedimintClient {
   /**
    * Makes a POST request to the `baseURL` at the given `endpoint` with the provided `body`.
    * Receives a JSON response.
+   * Automatically ensures a default federation ID is set if needed.
    * @param endpoint - The endpoint to make the request to.
    * @param body - The body of the request.
    */
   private async post<T>(endpoint: string, body: any): FedimintResponse<T> {
+    await this.ensureDefaultFederationId();
     const res = await fetch(`${this.baseUrl}${endpoint}`, {
       method: "POST",
       headers: {
@@ -159,29 +142,13 @@ class FedimintClient {
     return (await res.json()) as T;
   }
 
-  /**
-   * Makes a POST request to the `baseURL` at the given `endpoint` with the provided `body`.
-   * Adds the provided federation ID or the default federation ID to the request body.
-   * Receives a JSON response.
-   * @param endpoint - The endpoint to make the request to.
-   * @param body - The body of the request.
-   * @param federationId - The federation ID to use. If not provided, the default federation ID is used.
-   */
+  // Adjust postWithId to not require federationId as a mandatory parameter
+  // since ensureDefaultFederationId will ensure it's set.
   private async postWithId<T>(endpoint: string, body: any, federationId?: string): FedimintResponse<T> {
-    const res = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.password}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...body, fedimintId: federationId || this.defaultFederationId }),
-    });
+    // Note: No need to call ensureDefaultFederationId here since post already does.
+    const effectiveFederationId = federationId || this.defaultFederationId;
 
-    if (!res.ok) {
-      throw new Error(`POST request failed with status ${res.status}`);
-    }
-
-    return (await res.json()) as T;
+    return this.post<T>(endpoint, { ...body, fedimintId: effectiveFederationId });
   }
 
   /**

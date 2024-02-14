@@ -10,8 +10,8 @@ interface InfoResponse {
     [federationId: string]: {
         network: string;
         meta: { [key: string]: string };
-        total_amount_msat: number;
-        total_num_notes: number;
+        totalAmountMsat: number;
+        totalNumNotes: number;
         denominations_msat: TieredSummary;
     };
 }
@@ -25,14 +25,14 @@ interface ListOperationsRequest {
 }
 
 interface FederationIdsResponse {
-    federation_ids: string[];
+    federationIds: string[];
 }
 
 interface OperationOutput {
     id: string;
-    creation_time: string;
-    operation_kind: string;
-    operation_meta: any;
+    creationTime: string;
+    operationKind: string;
+    operationMeta: any;
     outcome?: any;
 }
 

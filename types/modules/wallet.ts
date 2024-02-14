@@ -3,12 +3,12 @@ interface DepositAddressRequest {
 }
 
 interface DepositAddressResponse {
-    operation_id: string;
+    operationId: string;
     address: string;
 }
 
 interface AwaitDepositRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface AwaitDepositResponse {
@@ -17,12 +17,12 @@ interface AwaitDepositResponse {
 
 interface WithdrawRequest {
     address: string;
-    amount_msat: string; // Assuming BitcoinAmountOrAll is serialized as a string
+    amountMsat: string;
 }
 
 interface WithdrawResponse {
     txid: string;
-    fees_sat: number;
+    feesSat: number;
 }
 
 export type {

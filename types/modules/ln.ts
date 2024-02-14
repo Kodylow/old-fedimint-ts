@@ -5,34 +5,34 @@ interface LnInvoiceRequest {
 }
 
 interface LnInvoiceResponse {
-    operation_id: string;
+    operationId: string;
     invoice: string;
 }
 
 interface AwaitInvoiceRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface LnPayRequest {
-    payment_info: string;
-    amount_msat?: number;
-    finish_in_background: boolean;
-    lnurl_comment?: string;
+    paymentInfo: string;
+    amountMsat?: number;
+    finishInBackground: boolean;
+    lnurlComment?: string;
 }
 
 interface LnPayResponse {
-    operation_id: string;
-    payment_type: string;
-    contract_id: string;
+    operationId: string;
+    paymentType: string;
+    contractId: string;
     fee: number;
 }
 
 interface AwaitLnPayRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface Gateway {
-    node_pub_key: string;
+    nodePubKey: string;
     active: boolean;
 }
 
@@ -41,7 +41,7 @@ interface ListGatewaysResponse {
 }
 
 interface SwitchGatewayRequest {
-    gateway_id: string;
+    gatewayId: string;
 }
 
 export type {

@@ -46,7 +46,7 @@ interface OOBNotes {
 
 interface SpendableNote {
     signature: Signature;
-    spend_key: KeyPair;
+    spendKey: KeyPair;
 }
 
 interface ReissueRequest {
@@ -54,12 +54,12 @@ interface ReissueRequest {
 }
 
 interface ReissueResponse {
-    amount_msat: number;
+    amountMsat: number;
 }
 
 interface SpendRequest {
-    amount_msat: number;
-    allow_overpay: boolean;
+    amountMsat: number;
+    allowOverpay: boolean;
     timeout: number;
 }
 
@@ -73,7 +73,7 @@ interface ValidateRequest {
 }
 
 interface ValidateResponse {
-    amount_msat: number;
+    amountMsat: number;
 }
 
 interface SplitRequest {
