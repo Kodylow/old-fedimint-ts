@@ -59,7 +59,7 @@ class FedimintClientBuilder {
     return this;
   }
 
-  async build(): Promise<FedimintClient> {
+  build(): FedimintClient {
     const client = new FedimintClient(this.baseUrl, this.password);
 
     return client;
