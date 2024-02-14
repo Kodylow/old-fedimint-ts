@@ -41,10 +41,12 @@ type FedimintResponse<T> = Promise<T>;
 class FedimintClientBuilder {
   private baseUrl: string;
   private password: string;
+  private defaultFederationId: string;
 
   constructor() {
     this.baseUrl = "";
     this.password = "";
+    this.defaultFederationId = "";
   }
 
   setBaseUrl(baseUrl: string): FedimintClientBuilder {
@@ -59,8 +61,18 @@ class FedimintClientBuilder {
     return this;
   }
 
-  build(): FedimintClient {
+  async build(): Promise<FedimintClient> {
     const client = new FedimintClient(this.baseUrl, this.password);
+
+    if (this.defaultFederationId) {
+      client.setDefaultFederationId(this.defaultFederationId);
+    } else {
+      const { federationIds } = await client.federationIds();
+
+      if (federationIds && federationIds.length > 0) {
+        client.setDefaultFederationId(federationIds[0]);
+      }
+    }
 
     return client;
   }
@@ -82,29 +94,12 @@ class FedimintClient {
   }
 
   /**
-   * Ensures that a default federation ID is set by fetching the connected federation IDs
-   * and setting the default to the first one if not already set.
-   */
-  private async ensureDefaultFederationId(): Promise<void> {
-    if (!this.defaultFederationId) {
-      const { federationIds } = await this.federationIds();
-
-      if (federationIds && federationIds.length > 0) {
-        this.defaultFederationId = federationIds[0];
-      } else {
-        throw new Error("No connected federations found to set as default.");
-      }
-    }
-  }
-
-  /**
    * Makes a GET request to the `baseURL` at the given `endpoint`.
    * Receives a JSON response.
    * Automatically ensures a default federation ID is set if needed.
    * @param endpoint - The endpoint to make the request to.
    */
   private async get<T>(endpoint: string): FedimintResponse<T> {
-    await this.ensureDefaultFederationId();
     const res = await fetch(`${this.baseUrl}${endpoint}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${this.password}` },
@@ -125,7 +120,6 @@ class FedimintClient {
    * @param body - The body of the request.
    */
   private async post<T>(endpoint: string, body: any): FedimintResponse<T> {
-    await this.ensureDefaultFederationId();
     const res = await fetch(`${this.baseUrl}${endpoint}`, {
       method: "POST",
       headers: {
