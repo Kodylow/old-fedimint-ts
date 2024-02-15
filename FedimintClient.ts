@@ -67,18 +67,12 @@ class FedimintClientBuilder {
     return this;
   }
 
-  async build(): Promise<FedimintClient> {
-    const client = new FedimintClient(this.baseUrl, this.password);
-
-    if (this.defaultFederationId) {
-      client.setDefaultFederationId(this.defaultFederationId);
-    } else {
-      const { federationIds } = await client.federationIds();
-
-      if (federationIds && federationIds.length > 0) {
-        client.setDefaultFederationId(federationIds[0]);
-      }
+  build(): FedimintClient {
+    if (this.baseUrl === "" || this.password === "" || this.defaultFederationId === "") {
+      throw new Error("baseUrl, password, and defaultFederationId must be set");
     }
+    
+    const client = new FedimintClient(this.baseUrl, this.password, this.defaultFederationId);
 
     return client;
   }
@@ -89,10 +83,10 @@ class FedimintClient {
   private password: string;
   private defaultFederationId: string;
 
-  constructor(baseUrl: string, password: string, defaultFederationId?: string) {
+  constructor(baseUrl: string, password: string, defaultFederationId: string) {
     this.baseUrl = baseUrl + "/fedimint/v2";
     this.password = password;
-    this.defaultFederationId = defaultFederationId || "";
+    this.defaultFederationId = defaultFederationId;
   }
 
   setDefaultFederationId(defaultFederationId: string) {
