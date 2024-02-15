@@ -106,7 +106,7 @@ class FedimintClient {
     });
 
     if (!res.ok) {
-      throw new Error(`GET request failed with status ${res.status}`);
+      throw new Error(`GET request failed: ${res}`);
     }
 
     return (await res.json()) as T;
@@ -130,7 +130,7 @@ class FedimintClient {
     });
 
     if (!res.ok) {
-      throw new Error(`POST request failed with status ${res.status}`);
+      throw new Error(`POST request failed: ${res}`);
     }
 
     return (await res.json()) as T;
