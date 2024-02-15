@@ -18,21 +18,21 @@ async function main() {
   const fedimintClient = await builder.build();
 
   // You can update the federationId to call methods on a different federation
-  const { federation_ids } = await fedimintClient.federationIds();
-  await fedimintClient.setDefaultFederationId(federation_ids[0]);
+  const { federationIds } = await fedimintClient.federationIds();
+  await fedimintClient.setDefaultFederationId(federationIds[0]);
 
   // Any methods that call on a specific federation can optionally take a federationId as the last argument
   // If no federationId is passed, the default federationId is used
-  const _ = await fedimintClient.listOperations({ limit: 10 }, federation_ids[1]);
+  const _ = await fedimintClient.listOperations({ limit: 10 }, federationIds[1]);
 
   // Admin methods give summaries by federation
   fedimintClient.info().then((response) => {
-    console.log("Current Total Msats Ecash: ", response.total_amount_msat);
+    console.log("Current Total Msats Ecash: ", response.totalAmountMsat);
   });
 
   // All module methods are called on the default federationId if you don't pass in a federationId
-  const { operation_id, invoice } = await fedimintClient.ln.createInvoice({
-    amount_msat: 10000,
+  const { operationId, invoice } = await fedimintClient.ln.createInvoice({
+    amountMsat: 10000,
     description: "test",
   });
 
@@ -40,9 +40,9 @@ async function main() {
 
   console.log("Waiting for payment...");
 
-  fedimintClient.ln.awaitInvoice({ operation_id }).then((response) => {
+  fedimintClient.ln.awaitInvoice({ operationId }).then((response) => {
     console.log("Payment Received!");
-    console.log("New Total Msats Ecash: ", response.total_amount_msat);
+    console.log("New Total Msats Ecash: ", response.totalAmountMsat);
   });
 }
 

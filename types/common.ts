@@ -12,7 +12,7 @@ interface InfoResponse {
         meta: { [key: string]: string };
         totalAmountMsat: number;
         totalNumNotes: number;
-        denominations_msat: TieredSummary;
+        denominationsMsat: TieredSummary;
     };
 }
 

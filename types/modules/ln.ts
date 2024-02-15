@@ -1,7 +1,7 @@
 interface LnInvoiceRequest {
-    amount_msat: number;
+    amountMsat: number;
     description: string;
-    expiry_time?: number;
+    expiryTime?: number;
 }
 
 interface LnInvoiceResponse {

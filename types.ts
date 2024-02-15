@@ -8,11 +8,11 @@ interface TieredSummary {
 }
 
 interface InfoResponse {
-    federation_id: string;
+    federationId: string;
     network: string;
     meta: { [key: string]: string };
-    total_amount_msat: number;
-    total_num_notes: number;
+    totalAmountMsat: number;
+    totalNumNotes: number;
     denominations_msat: TieredSummary;
 }
 
@@ -26,9 +26,9 @@ interface ListOperationsRequest {
 
 interface OperationOutput {
     id: string;
-    creation_time: string;
-    operation_kind: string;
-    operation_meta: any;
+    creationTime: string;
+    operationKind: string;
+    operationMeta: any;
     outcome?: any;
 }
 
@@ -37,12 +37,12 @@ interface DepositAddressRequest {
 }
 
 interface DepositAddressResponse {
-    operation_id: string;
+    operationId: string;
     address: string;
 }
 
 interface AwaitDepositRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface AwaitDepositResponse {
@@ -51,7 +51,7 @@ interface AwaitDepositResponse {
 
 interface WithdrawRequest {
     address: string;
-    amount_msat: string; // Assuming BitcoinAmountOrAll is serialized as a string
+    amountMsat: string;
 }
 
 interface WithdrawResponse {
