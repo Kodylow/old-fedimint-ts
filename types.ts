@@ -13,7 +13,7 @@ interface InfoResponse {
     meta: { [key: string]: string };
     totalAmountMsat: number;
     totalNumNotes: number;
-    denominations_msat: TieredSummary;
+    denominationsMsat: TieredSummary;
 }
 
 interface BackupRequest {
@@ -56,49 +56,49 @@ interface WithdrawRequest {
 
 interface WithdrawResponse {
     txid: string;
-    fees_sat: number;
+    feesSat: number;
 }
 
 interface LnInvoiceRequest {
-    amount_msat: number;
+    amountMsat: number;
     description: string;
-    expiry_time?: number;
+    expiryTime?: number;
 }
 
 interface LnInvoiceResponse {
-    operation_id: string;
+    operationId: string;
     invoice: string;
 }
 
 interface AwaitInvoiceRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface LnPayRequest {
-    payment_info: string;
-    amount_msat?: number;
-    finish_in_background: boolean;
-    lnurl_comment?: string;
+    paymentInfo: string;
+    amountMsat?: number;
+    finishInBackground: boolean;
+    lnurlComment?: string;
 }
 
 interface LnPayResponse {
-    operation_id: string;
-    payment_type: string;
-    contract_id: string;
+    operationId: string;
+    paymentType: string;
+    contractId: string;
     fee: number;
 }
 
 interface AwaitLnPayRequest {
-    operation_id: string;
+    operationId: string;
 }
 
 interface Gateway {
-    node_pub_key: string;
+    nodePubKey: string;
     active: boolean;
 }
 
 interface SwitchGatewayRequest {
-    gateway_id: string;
+    gatewayId: string;
 }
 
 interface FederationIdPrefix {
@@ -149,7 +149,7 @@ interface OOBNotes {
 
 interface SpendableNote {
     signature: Signature;
-    spend_key: KeyPair;
+    spendKey: KeyPair;
 }
 
 interface ReissueRequest {
@@ -157,12 +157,12 @@ interface ReissueRequest {
 }
 
 interface ReissueResponse {
-    amount_msat: number;
+    amountMsat: number;
 }
 
 interface SpendRequest {
-    amount_msat: number;
-    allow_overpay: boolean;
+    amountMsat: number;
+    allowOverpay: boolean;
     timeout: number;
 }
 
@@ -176,7 +176,7 @@ interface ValidateRequest {
 }
 
 interface ValidateResponse {
-    amount_msat: number;
+    amountMsat: number;
 }
 
 interface SplitRequest {
@@ -195,7 +195,7 @@ interface CombineResponse {
     notes: OOBNotes;
 }
 
-export {
+export type {
     Tiered,
     TieredSummary,
     InfoResponse,
