@@ -61,6 +61,12 @@ class FedimintClientBuilder {
     return this;
   }
 
+  setDefaultFederationId(defaultFederationId: string): FedimintClientBuilder {
+    this.defaultFederationId = defaultFederationId;
+
+    return this;
+  }
+
   async build(): Promise<FedimintClient> {
     const client = new FedimintClient(this.baseUrl, this.password);
 
