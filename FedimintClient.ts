@@ -41,12 +41,12 @@ type FedimintResponse<T> = Promise<T>;
 class FedimintClientBuilder {
   private baseUrl: string;
   private password: string;
-  private defaultFederationId: string;
+  private activeFederationId: string;
 
   constructor() {
     this.baseUrl = "";
     this.password = "";
-    this.defaultFederationId = "";
+    this.activeFederationId = "";
   }
 
   setBaseUrl(baseUrl: string): FedimintClientBuilder {
@@ -61,18 +61,18 @@ class FedimintClientBuilder {
     return this;
   }
 
-  setDefaultFederationId(defaultFederationId: string): FedimintClientBuilder {
-    this.defaultFederationId = defaultFederationId;
+  setActiveFederationId(activeFederationId: string): FedimintClientBuilder {
+    this.activeFederationId = activeFederationId;
 
     return this;
   }
 
   build(): FedimintClient {
-    if (this.baseUrl === "" || this.password === "" || this.defaultFederationId === "") {
-      throw new Error("baseUrl, password, and defaultFederationId must be set");
+    if (this.baseUrl === "" || this.password === "" || this.activeFederationId === "") {
+      throw new Error("baseUrl, password, and activeFederationId must be set");
     }
     
-    const client = new FedimintClient(this.baseUrl, this.password, this.defaultFederationId);
+    const client = new FedimintClient(this.baseUrl, this.password, this.activeFederationId);
 
     return client;
   }
@@ -81,16 +81,16 @@ class FedimintClientBuilder {
 class FedimintClient {
   private baseUrl: string;
   private password: string;
-  private defaultFederationId: string;
+  private activeFederationId: string;
 
-  constructor(baseUrl: string, password: string, defaultFederationId: string) {
+  constructor(baseUrl: string, password: string, activeFederationId: string) {
     this.baseUrl = baseUrl + "/fedimint/v2";
     this.password = password;
-    this.defaultFederationId = defaultFederationId;
+    this.activeFederationId = activeFederationId;
   }
 
-  setDefaultFederationId(defaultFederationId: string) {
-    this.defaultFederationId = defaultFederationId;
+  setactiveFederationId(activeFederationId: string) {
+    this.activeFederationId = activeFederationId;
   }
 
   /**
@@ -137,10 +137,10 @@ class FedimintClient {
   }
 
   // Adjust postWithId to not require federationId as a mandatory parameter
-  // since ensureDefaultFederationId will ensure it's set.
+  // since ensureactiveFederationId will ensure it's set.
   private async postWithId<T>(endpoint: string, body: any, federationId?: string): FedimintResponse<T> {
-    // Note: No need to call ensureDefaultFederationId here since post already does.
-    const effectiveFederationId = federationId || this.defaultFederationId;
+    // Note: No need to call ensureactiveFederationId here since post already does.
+    const effectiveFederationId = federationId || this.activeFederationId;
 
     return this.post<T>(endpoint, { ...body, fedimintId: effectiveFederationId });
   }
