@@ -61,8 +61,8 @@ class FedimintClientBuilder {
     return this;
   }
 
-  setActiveFederationId(activeFederationId: string): FedimintClientBuilder {
-    this.activeFederationId = activeFederationId;
+  setActiveFederationId(federationId: string): FedimintClientBuilder {
+    this.activeFederationId = federationId;
 
     return this;
   }
@@ -89,8 +89,8 @@ class FedimintClient {
     this.activeFederationId = activeFederationId;
   }
 
-  setactiveFederationId(activeFederationId: string) {
-    this.activeFederationId = activeFederationId;
+  setActiveFederationId(federationId: string) {
+    this.activeFederationId = federationId;
   }
 
   /**
