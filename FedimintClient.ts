@@ -142,7 +142,7 @@ class FedimintClient {
     // Note: No need to call ensureactiveFederationId here since post already does.
     const effectiveFederationId = federationId || this.activeFederationId;
 
-    return this.post<T>(endpoint, { ...body, fedimintId: effectiveFederationId });
+    return this.post<T>(endpoint, { ...body, federationId: effectiveFederationId });
   }
 
   /**
