@@ -1,35 +1,35 @@
 interface DepositAddressRequest {
-  timeout: number;
+    timeout: number;
 }
 
 interface DepositAddressResponse {
-  operationId: string;
-  address: string;
+    operationId: string;
+    address: string;
 }
 
 interface AwaitDepositRequest {
-  operationId: string;
+    operationId: string;
 }
 
 interface AwaitDepositResponse {
-  status: string;
+    status: string;
 }
 
 interface WithdrawRequest {
-  address: string;
-  amountMsat: number | "all";
+    address: string;
+    amountMsat: number | 'all';
 }
 
 interface WithdrawResponse {
-  txid: string;
-  feesSat: number;
+    txid: string;
+    feesSat: number;
 }
 
 export type {
-  DepositAddressRequest,
-  DepositAddressResponse,
-  AwaitDepositRequest,
-  AwaitDepositResponse,
-  WithdrawRequest,
-  WithdrawResponse,
-};
+    DepositAddressRequest,
+    DepositAddressResponse,
+    AwaitDepositRequest,
+    AwaitDepositResponse,
+    WithdrawRequest,
+    WithdrawResponse,
+}

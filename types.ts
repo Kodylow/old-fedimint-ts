@@ -1,3 +1,4 @@
+
 interface Tiered<T> {
   [amount: number]: T;
 }
@@ -50,7 +51,7 @@ interface AwaitDepositResponse {
 
 interface WithdrawRequest {
   address: string;
-  amountMsat: number | "all";
+  amountMsat: number | 'all';
 }
 
 interface WithdrawResponse {
@@ -137,8 +138,8 @@ interface OOBNotesData {
   Notes?: TieredMulti<SpendableNote>;
   FederationIdPrefix?: FederationIdPrefix;
   Default?: {
-    variant: number; // Assuming u64 is equivalent to number in TypeScript
-    bytes: number[]; // Assuming Vec<u8> is equivalent to number[] in TypeScript
+      variant: number; // Assuming u64 is equivalent to number in TypeScript
+      bytes: number[]; // Assuming Vec<u8> is equivalent to number[] in TypeScript
   };
 }
 
@@ -167,7 +168,7 @@ interface SpendRequest {
 
 interface SpendResponse {
   operation: string;
-  notes: OOBNotes;
+  notes: OOBNotes; 
 }
 
 interface ValidateRequest {
