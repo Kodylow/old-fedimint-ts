@@ -51,7 +51,7 @@ interface AwaitDepositResponse {
 
 interface WithdrawRequest {
     address: string;
-    amountMsat: string;
+    amountMsat: number | 'all';
 }
 
 interface WithdrawResponse {
