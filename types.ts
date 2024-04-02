@@ -1,3 +1,4 @@
+
 interface Tiered<T> {
   [amount: number]: T;
 }
@@ -49,32 +50,32 @@ interface BTCInput {
   script_sig: string;
   sequence: number;
   witness: string[];
-}
+};
 
 interface BTCOutput {
   value: number;
   script_pubkey: string;
-}
+};
 
-interface BTCTransaction {
+interface BTCTransaction  {
   version: number;
   lock_time: number;
   input: BTCInput[];
   output: BTCOutput[];
-}
+};
 
-interface AwaitDepositResponseConfirmed {
+interface AwaitDespositResponseConfirmed {
   btc_transaction: BTCTransaction;
   out_idx: number;
 }
 
 interface AwaitDepositResponse {
-  status: { Confirmed: AwaitDepositResponseConfirmed } | { Failed: string };
+  status: { Confirmed: AwaitDespositResponseConfirmed } | { Failed: string }
 }
 
 interface WithdrawRequest {
   address: string;
-  amountMsat: number | "all";
+  amountMsat: number | 'all';
 }
 
 interface WithdrawResponse {
@@ -161,8 +162,8 @@ interface OOBNotesData {
   Notes?: TieredMulti<SpendableNote>;
   FederationIdPrefix?: FederationIdPrefix;
   Default?: {
-    variant: number; // Assuming u64 is equivalent to number in TypeScript
-    bytes: number[]; // Assuming Vec<u8> is equivalent to number[] in TypeScript
+      variant: number; // Assuming u64 is equivalent to number in TypeScript
+      bytes: number[]; // Assuming Vec<u8> is equivalent to number[] in TypeScript
   };
 }
 
@@ -191,7 +192,7 @@ interface SpendRequest {
 
 interface SpendResponse {
   operation: string;
-  notes: OOBNotes;
+  notes: OOBNotes; 
 }
 
 interface ValidateRequest {
