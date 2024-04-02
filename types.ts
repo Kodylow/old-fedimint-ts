@@ -64,13 +64,13 @@ interface BTCTransaction  {
   output: BTCOutput[];
 };
 
-interface AwaitDespositResponseConfirmed {
+interface AwaitDepositResponseConfirmed {
   btc_transaction: BTCTransaction;
   out_idx: number;
 }
 
 interface AwaitDepositResponse {
-  status: { Confirmed: AwaitDespositResponseConfirmed } | { Failed: string }
+  status: { Confirmed: AwaitDepositResponseConfirmed } | { Failed: string }
 }
 
 interface WithdrawRequest {
